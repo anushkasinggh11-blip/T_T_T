@@ -72,72 +72,118 @@ bool hasWon(const std::array<char, 9>& board, char player) {
 
 int main() {
 
-    std::array<char, 9> board = {
-        '1', '2', '3',
-        '4', '5', '6',
-        '7', '8', '9'
-    };
+    char playAgain;
 
-    char player = 'X';
-    int movesPlayed = 0;
+    do {
 
-    std::cout << "===== TIC-TAC-TOE =====\n\n";
+        // Reset game state for every new match
+        std::array<char, 9> board = {
+            '1', '2', '3',
+            '4', '5', '6',
+            '7', '8', '9'
+        };
 
-    printBoard(board);
+        char player = 'X';
+        int movesPlayed = 0;
+        bool gameOver = false;
 
-    while (movesPlayed < 9) {
-
-        std::cout << "\nPlayer " << player
-                  << ", choose a square (1-9): ";
-
-        std::string line;
-
-        if (!std::getline(std::cin, line)) {
-            return 0;
-        }
-
-        int square = parseSquare(line);
-
-        if (square == 0) {
-
-            std::cout << "Invalid input! Enter 1-9.\n";
-
-            continue;
-        }
-
-        int index = square - 1;
-
-        if (board[index] == 'X' || board[index] == 'O') {
-
-            std::cout << "Square already occupied!\n";
-
-            continue;
-        }
-
-        board[index] = player;
-
-        ++movesPlayed;
-
-        std::cout << '\n';
+        std::cout << "\n===== TIC-TAC-TOE =====\n\n";
 
         printBoard(board);
 
-        if (hasWon(board, player)) {
+        // Current match loop
+        while (!gameOver) {
 
-            std::cout << "\nPlayer " << player << " wins!\n";
+            std::cout << "\nPlayer " << player
+                      << ", choose a square (1-9): ";
 
-            return 0;
+            std::string line;
+
+            if (!std::getline(std::cin, line)) {
+                return 0;
+            }
+
+            int square = parseSquare(line);
+
+            if (square == 0) {
+
+                std::cout << "Invalid input! Enter 1-9.\n";
+
+                continue;
+            }
+
+            int index = square - 1;
+
+            if (board[index] == 'X' || board[index] == 'O') {
+
+                std::cout << "Square already occupied!\n";
+
+                continue;
+            }
+
+            board[index] = player;
+
+            ++movesPlayed;
+
+            std::cout << '\n';
+
+            printBoard(board);
+
+            // Check winner
+            if (hasWon(board, player)) {
+
+                std::cout << "\nPlayer " << player << " wins!\n";
+
+                gameOver = true;
+            }
+
+            // Check draw
+            else if (movesPlayed == 9) {
+
+                std::cout << "\nIt's a draw!\n";
+
+                gameOver = true;
+            }
+
+            // Switch player only if game is not over
+            if (!gameOver) {
+
+                player = (player == 'X') ? 'O' : 'X';
+            }
         }
 
-        if (movesPlayed == 9) {
+        // Ask whether players want another match
+        while (true) {
 
-            std::cout << "\nIt's a draw!\n";
+            std::cout << "\nDo you want to play again? (y/n): ";
 
-            return 0;
+            std::string choice;
+
+            if (!std::getline(std::cin, choice)) {
+                return 0;
+            }
+
+            if (choice == "y" || choice == "Y") {
+
+                playAgain = 'y';
+                break;
+            }
+
+            else if (choice == "n" || choice == "N") {
+
+                playAgain = 'n';
+                break;
+            }
+
+            else {
+
+                std::cout << "Invalid choice! Enter y or n.\n";
+            }
         }
 
-        player = (player == 'X') ? 'O' : 'X';
-    }
+    } while (playAgain == 'y');
+
+    std::cout << "\nThanks for playing!\n";
 
     return 0;
 }
