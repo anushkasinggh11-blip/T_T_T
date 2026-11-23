@@ -64,4 +64,4 @@ Used AI to understand how to make C++ executables and to fix some logic and synt
 
 ## License
 
-MIT License
+[MIT License](LICENSE)
